@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import { Request, Response } from 'express';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
 (async () => {
@@ -15,17 +16,17 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   app.use(bodyParser.json());
 
   // This URL can be used for testing purposes: image_url=https://image.shutterstock.com/image-photo/diverse-amazon-forest-seen-above-600w-2072628056.jpg
-app.get('/filteredimage',async (req, res) => {
+app.get('/filteredimage',async (req: Request, res: Response) => {
   console.log('Received request to filter image. Validating query params');
   const query = require('url').parse(req.url,true).query;
-  const image_url = query.image_url;
+  const image_url:string = query.image_url;
   if (!image_url) {
     res.status(400).send('The request must contains image_url as parameter!!!');
   }
 
   try {
     console.log('Attempting to filter image from URL: %s', image_url);
-    const outPath = await filterImageFromURL(image_url, path);
+    const outPath:string = await filterImageFromURL(image_url, path);
     console.log('Received filtered image path: %s', outPath);
     res.status(200).sendFile(outPath);
     console.log('Attempting to delete the files already filtered and sent.')

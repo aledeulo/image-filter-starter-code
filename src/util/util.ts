@@ -14,7 +14,7 @@ export async function filterImageFromURL(inputURL: string, storePath: string): P
     try {
       console.log('Received order to fetch image from: %s', inputURL);
       const photo = await Jimp.read(inputURL);
-      const outpath = storePath + "/filtered." + Math.floor(Math.random() * 2000) + ".jpg";
+      const outpath: string = storePath + "/filtered." + Math.floor(Math.random() * 2000) + ".jpg";
       console.log('Received photo from Jimp');
       await photo
         .resize(256, 256) // resize
