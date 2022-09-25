@@ -9,28 +9,33 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   // Set the network port
   const port = process.env.PORT || 8082;
+  const path = process.env.OUT_PUT_PATH || '/temp'
   
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
-  // GET /filteredimage?image_url={{URL}}
-  // endpoint to filter an image from a public url.
-  // IT SHOULD
-  //    1
-  //    1. validate the image_url query
-  //    2. call filterImageFromURL(image_url) to filter the image
-  //    3. send the resulting file in the response
-  //    4. deletes any files on the server on finish of the response
-  // QUERY PARAMATERS
-  //    image_url: URL of a publicly accessible image
-  // RETURNS
-  //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
+  // This URL can be used for testing purposes: image_url=https://image.shutterstock.com/image-photo/diverse-amazon-forest-seen-above-600w-2072628056.jpg
+app.get('/filteredimage',async (req, res) => {
+  console.log('Received request to filter image. Validating query params');
+  const query = require('url').parse(req.url,true).query;
+  const image_url = query.image_url;
+  if (!image_url) {
+    res.status(400).send('The request must contains image_url as parameter!!!');
+  }
 
-  /**************************************************************************** */
+  try {
+    console.log('Attempting to filter image from URL: %s', image_url);
+    const outPath = await filterImageFromURL(image_url, path);
+    console.log('Received filtered image path: %s', outPath);
+    res.status(200).sendFile(outPath);
+    console.log('Attempting to delete the files already filtered and sent.')
+    res.on('finish', () => deleteLocalFiles([outPath]));
+    console.log('Deleted the files already filtered and sent.')
+  } catch (error) {
+    res.status(500).send({error: 'Unable to process the request'});
+  }
+});
 
-  //! END @TODO1
-  
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {

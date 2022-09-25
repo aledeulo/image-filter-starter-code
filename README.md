@@ -31,6 +31,13 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
 Follow the process described in the course to `eb init` a new application and `eb create` a new environment to deploy your image-filter service! Don't forget you can use `eb deploy` to push changes.
 
+
+
+### Test the filter image api
+You can use the following url to filter the image: https://image.shutterstock.com/image-photo/diverse-amazon-forest-seen-above-600w-2072628056.jpg
+#### URL sample: http://localhost:8082/filteredimage?image_url=https://image.shutterstock.com/image-photo/diverse-amazon-forest-seen-above-600w-2072628056.jpg
+
+
 ## Stand Out (Optional)
 
 ### Refactor the course RESTapi
